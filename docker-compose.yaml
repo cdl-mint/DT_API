@@ -3,7 +3,7 @@ services:
   airquality:
     build:
       context: .
-      dockerfile: ./Air_Quality/Dockerfile
+      dockerfile: ./air_Quality/Dockerfile
     networks:
       - db_network
     command: uvicorn main:app --host 0.0.0.0 --port 8000
@@ -12,12 +12,12 @@ services:
     depends_on:
       - timeScaleDatabase
     volumes:
-      - ./Air_Quality:/app/
+      - ./air_Quality:/app/
 
   energyconsumption:
     build:
       context: .
-      dockerfile: ./Energy_Consumption/Dockerfile
+      dockerfile: ./energy_Consumption/Dockerfile
     networks:
       - db_network
     command: uvicorn main:app --host 0.0.0.0 --port 8080
@@ -26,7 +26,7 @@ services:
     depends_on:
       - timeScaleDatabase
     volumes:
-      - ./Energy_Consumption:/app/
+      - ./energy_Consumption:/app/
 
   smartroom:
     container_name: smartroom_api

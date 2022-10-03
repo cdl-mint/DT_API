@@ -7,6 +7,10 @@ The air quality data such as co2, humidity, and tempertaure is obtained with the
 
 The energy consumption of microcontrollers are measured in terms of current, power, and voltage with the INA_219 current sensor for minimising the energy consumption as much as possible.
 
+#### UseCase-3: Smart_Room
+
+The smart room set up established with zigbee2mqtt which acts as a gateway that connects the zigbee network to mqtt network  and the interactions to the smart devices are operated from the fast API.
+
 #### DT_API
 
 The digital twin represents the api that is created for performing the CRUD operations for the airquality  and energy consumption use-case.
@@ -37,6 +41,7 @@ If the build is successful, you can see the services running on the ports as sho
 | ----------------------------- | ---- |
 | fast_api (air quality)        | 8000 |
 | fast_api (energy consumption) | 8080 |
+| fast_api (smart room)         | 8001 |
 | grafana                       | 3000 |
 | pgAdmin                       | 5050 |
 
@@ -62,7 +67,7 @@ Now the tables will be created automatically based on the [database schema](http
 
 Now we can use the fast API requests to perform CRUD operations on the created tables.
 
-Navigate to the browser and check if the API is up and running from the following ports (8000 and 8080) from localhost server.
+Navigate to the browser and check if the API is up and running from the following ports (8000 , 8001 and 8080) from localhost server.
 
 The screenshots of the API are as follows :
 
@@ -73,6 +78,12 @@ fast API for the air quality use case:
 fast API for the energy consumption use case:
 
 ![fastAPI_EC](./images/fastAPI_EC.png)
+
+fast API for the smart room use case:
+
+![fastAPI_SR](./images/fastAPI_SR.png)
+
+
 
 #### Sample POST Requests:
 
@@ -122,7 +133,7 @@ Search for the postgresql data source and select from the filtered options, ther
 
 ![Grafana_postgresqlds](./images/Grafana_AddDataSources.png)
 
-Add the data source credentials (database, username, and password) based on the docker-compose.yaml configuration, make sure that the host name matches the docker container name of the timescale data source. The host name is essential for the grafana to identify the data source in the server.  Disbale the verification certification (TLS/SSL Mode). Test if the the database connection is successful as shown in  figure.
+Add the data source credentials (database, username, and password) based on the docker-compose.yaml configuration, make sure that the host name matches the docker container name of the timescale data source. The host name is essential for the grafana to identify the data source in the server.  Disbale the verification certification (TLS/SSL Mode). Test if the the database connection is successful as shown in figure.
 
 ![Grafana_datasource](./images/Grafana_DataSources.png)
 

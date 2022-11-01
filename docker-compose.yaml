@@ -1,32 +1,32 @@
 version: '3.8'
 services:
-  airquality:
-    build:
-      context: .
-      dockerfile: ./air_Quality/Dockerfile
-    networks:
-      - db_network
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
-    ports:
-      - 8000:8000
-    depends_on:
-      - timeScaleDatabase
-    volumes:
-      - ./air_Quality:/app/
+  # airquality:
+  #   build:
+  #     context: .
+  #     dockerfile: ./air_Quality/Dockerfile
+  #   networks:
+  #     - db_network
+  #   command: uvicorn main:app --host 0.0.0.0 --port 8000
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - timeScaleDatabase
+  #   volumes:
+  #     - ./air_Quality:/app/
 
-  energyconsumption:
-    build:
-      context: .
-      dockerfile: ./energy_Consumption/Dockerfile
-    networks:
-      - db_network
-    command: uvicorn main:app --host 0.0.0.0 --port 8080
-    ports:
-      - 8080:8080
-    depends_on:
-      - timeScaleDatabase
-    volumes:
-      - ./energy_Consumption:/app/
+  # energyconsumption:
+  #   build:
+  #     context: .
+  #     dockerfile: ./energy_Consumption/Dockerfile
+  #   networks:
+  #     - db_network
+  #   command: uvicorn main:app --host 0.0.0.0 --port 8080
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - timeScaleDatabase
+  #   volumes:
+  #     - ./energy_Consumption:/app/
 
   smartroom:
     container_name: smartroom_api
@@ -47,27 +47,27 @@ services:
     environment:
       - TZ=Europe/Paris
 
-  subscriber:
-    container_name: smartroom_mqtt_subscriber
-    build:
-      context: .
-      dockerfile: ./smart_Room/Dockerfile_subscriber
-    networks:
-      - db_network
-    command: python subscriber.py
+  # subscriber:
+  #   container_name: smartroom_mqtt_subscriber
+  #   build:
+  #     context: .
+  #     dockerfile: ./smart_Room/Dockerfile_subscriber
+  #   networks:
+  #     - db_network
+  #   command: python subscriber.py
 
-    depends_on:
-      - smartroom
-    volumes:
-      - ./smart_Room/devices.json:/app/devices.json
+  #   depends_on:
+  #     - smartroom
+  #   volumes:
+  #     - ./smart_Room/devices.json:/app/devices.json
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:9.0.6
-    ports:
-      - 3000:3000
-    networks:
-      - db_network
+  # grafana:
+  #   container_name: grafana
+  #   image: grafana/grafana:9.0.6
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - db_network
 
   timeScaleDatabase:
     container_name: timeScaleDatabase

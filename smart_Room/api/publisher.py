@@ -31,7 +31,7 @@ def publish_message(topic, data):
     
 
     #ensure the connection stays active till the message has been sent
-    client.loop_forever()
+    client.loop_forever(timeout = 5)
 
 
 def on_connect(client, userdata, flags, rc):

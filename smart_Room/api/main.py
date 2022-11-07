@@ -93,15 +93,15 @@ async def update_RoomDetails(room_id: str, request: Update_RoomObject):
 """Deletes a room with a certain room_id or returns an error if the room does not exist"""
 @app.delete("/Rooms/{room_id}", status_code=status.HTTP_200_OK)
 async def delete_Room(room_id: str):
-    deleteRoom = db_Session.query(Room).filter(Room.room_id == room_id).one()
-    if not deleteRoom:
+    deleteRoom = db_Session.query(Room).filter(Room.room_id == room_id)
+    if not deleteRoom.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Room with the room id {room_id} is not found')
 
         
    
 
-    db_Session.delete(deleteRoom)
+    db_Session.delete(deleteRoom.first())
     db_Session.commit()
     return {"code": "success", "message": f"deleted room with id {room_id}"}
 
@@ -168,13 +168,13 @@ async def update_light(room_id: str, light_id: str, request: Update_LightObject)
 @app.delete("/Rooms/{room_id}/Lights/{light_id}", status_code=status.HTTP_200_OK)
 async def delete_light(room_id: str, light_id: str):
     deleteLight = db_Session.query(Light).filter(
-        Light.room_id == room_id, Light.light_id == light_id).one()
-    if not deleteLight:
+        Light.room_id == room_id, Light.light_id == light_id)
+    if not deleteLight.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Light with the id {light_id} is not available in room {room_id}')
 
 
-    db_Session.delete(deleteLight)
+    db_Session.delete(deleteLight.first())
     db_Session.commit()
     delete_from_json(light_id)
     return {"code": "success", "message": f"deleted light with id {light_id} from room {room_id}"}
@@ -192,9 +192,13 @@ async def activate_Light(room_id: str, light_id: str):
     data["state"] = "TOGGLE"
     topic = f"zigbee2mqtt/{light_id}/set"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Device toggled"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "device toggled"}
+    except:
+        return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 """Changes the settings of a light via a Light Operation Objects."""
 """Example Light Operation Object 
@@ -218,9 +222,13 @@ async def complex_setting_light(room_id: str, light_id: str, operation: Light_Op
 
     topic = f"zigbee2mqtt/{light_id}/set"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Device Settings changed"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "Setting succeded"}
+    except:
+        return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 """Returns the Operational Data for a Light. Either state an interval for the amount of days to go back, define a from and to in Unix Timestamps (ms) or leave everything on 0 to get all data"""
 """Example time query object 
@@ -270,9 +278,13 @@ async def get_status_of_light(room_id: str, light_id: str):
     data["state"] = " "
     topic = f"zigbee2mqtt/{light_id}/get"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Manual save triggered"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "Manual save triggered"}
+    except:
+            return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 """Post Operational Data for a light in a room"""
 """Example Operational Light object 
@@ -359,12 +371,12 @@ async def update_motion_sensor(room_id: str, sensor_id: str, request: Motion_Sen
 @app.delete("/Rooms/{room_id}/Motion_Sensors/{sensor_id}", status_code=status.HTTP_200_OK)
 async def delete_motion_sensor(room_id: str, sensor_id: str):
     deleteMotionSensor = db_Session.query(Motion_Sensor).filter(
-        Motion_Sensor.room_id == room_id, Motion_Sensor.sensor_id == sensor_id).one()
-    if not deleteMotionSensor:
+        Motion_Sensor.room_id == room_id, Motion_Sensor.sensor_id == sensor_id)
+    if not deleteMotionSensor.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Light with the id {sensor_id} is not available in room {room_id}')
     
-    db_Session.delete(deleteMotionSensor)
+    db_Session.delete(deleteMotionSensor.first())
     db_Session.commit()
     delete_from_json(sensor_id)
     return {"code": "success", "message": f"deleted light with id {sensor_id} from room {room_id}"}
@@ -419,9 +431,13 @@ async def get_status_of_motion_sensor(room_id: str, sensor_id: str):
     data["state"] = " "
     topic = f"zigbee2mqtt/{sensor_id}/get"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Manual save triggered"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "Manual save triggered"}
+    except:
+        return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 """Post Operational Data for a motion sensor in a room"""
 """Example Operational Motion Sensor object 
@@ -502,13 +518,15 @@ async def update_power_plug(room_id: str, plug_id: str, request: Power_Plug_Upda
 """Deletes a specific power plug  in a room or returns an error if the power plug does not exist in the room"""
 @app.delete("/Rooms/{room_id}/Power_Plugs/{plug_id}", status_code=status.HTTP_200_OK)
 async def delete_power_plug(room_id: str, plug_id: str):
+    
     deletePowerPlug = db_Session.query(Power_Plug).filter(
-        Power_Plug.room_id == room_id, Power_Plug.plug_id == plug_id).one()
-    if not deletePowerPlug:
+        Power_Plug.room_id == room_id, Power_Plug.plug_id == plug_id)
+
+    if not deletePowerPlug.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'Light with the id {plug_id} is not available in room {room_id}')
 
-    db_Session.delete(deletePowerPlug)
+    db_Session.delete(deletePowerPlug.first())
     db_Session.commit()
     delete_from_json(plug_id)
     return {"code": "success", "message": f"deleted light with id {plug_id} from room {room_id}"}
@@ -564,9 +582,13 @@ async def get_status_of_power_plug(room_id: str, plug_id: str):
     data["state"] = " "
     topic = f"zigbee2mqtt/{plug_id}/get"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Manual save triggered"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "Manual save triggered"}
+    except:
+        return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 """Post Operational Data for a power plug in a room"""
 """Example Operational Power Plug object 
@@ -600,9 +622,13 @@ async def activate_Power_Plug(room_id: str, plug_id: str):
     data["state"] = "TOGGLE"
     topic = f"zigbee2mqtt/{plug_id}/set"
 
-    publish_message(topic, data)
+    try:
 
-    return {"code": "success", "message": "Device toggled"}
+        await publish_message(topic, data)
+
+        return {"code": "success", "message": "Device toggled"}
+    except:
+        return {"code": "failure", "message": "Error publishing message in zigbee"}
 
 
 #**Helper Methods**

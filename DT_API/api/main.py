@@ -101,7 +101,7 @@ async def get_dt_by_id(id: str):
         raise HTTPException(
             status_code=400, detail=f'ID Not Found.')
 
-@app.post("/DTs/{dt_id}/device/{device_type}")
+@app.post("/DTs/{dt_id}/devices/{device_type}")
 async def post_device_to_dt(dt_id: str, device_type: str, request: Request):
     digital_twins = read_in_dts()
 
@@ -152,7 +152,7 @@ async def get_all_devices_of_dt(dt_id: str):
             status_code=400, detail=f'ID Not Found.')
 
 
-@app.get("/DTs/{dt_id}/device/{device_id}")
+@app.get("/DTs/{dt_id}/devices/{device_id}")
 async def get_device_from_dt_by_id(dt_id: str, device_id: str):
     digital_twins = read_in_dts()
 
@@ -172,7 +172,7 @@ async def get_device_from_dt_by_id(dt_id: str, device_id: str):
             status_code=400, detail=f'ID Not Found.')
 
 
-@app.delete("/DTs/{dt_id}/device/{device_id}")
+@app.delete("/DTs/{dt_id}/devices/{device_id}")
 async def delete_device_from_dt_by_id(dt_id: str, device_id: str):
     digital_twins = read_in_dts()
 
@@ -214,7 +214,7 @@ async def delete_device_from_dt_by_id(dt_id: str, device_id: str):
         raise HTTPException(
         status_code=400, detail=f'ID Not Found.')
 
-@app.get("/DTs/{dt_id}/device/{device_id}/GetParameters")
+@app.get("/DTs/{dt_id}/devices/{device_id}/GetParameters")
 async def get_paramters(dt_id: str, device_id: str, request: Request):
     digital_twins = read_in_dts()
 
@@ -260,7 +260,7 @@ async def get_paramters(dt_id: str, device_id: str, request: Request):
         status_code=400, detail=f'ID Not Found.')
 
 
-@app.post("/DTs/{dt_id}/device/{device_id}/ExecuteCommand/{command}")
+@app.post("/DTs/{dt_id}/devices/{device_id}/ExecuteCommand/{command}")
 async def execute_command(dt_id: str, device_id: str, command: str):
      digital_twins = read_in_dts()
 

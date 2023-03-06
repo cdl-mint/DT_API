@@ -18,6 +18,6 @@ The niryo robot is operated using the API. The operations such as pick and place
 #### Generic_DT_API
 
 The api represents the common interface for communicating with the use-cases. The api is used for performing CRUD operations on digital twin.
-
 The api is created using the fast api framework in Python. 
-
+The following image displays the screenshot of the digital twin api 
+![dt_api](./assets/DT_API.png)
